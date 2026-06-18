@@ -7,7 +7,7 @@ RUN npm install -g bun@latest
 
 # Copia lockfiles antes do source para aproveitar cache de camadas
 COPY package.json bun.lock bunfig.toml ./
-RUN bun install --frozen-lockfile
+RUN bun install
 
 # Copia o restante do source e builda
 # (public/*.mp4 excluídos via .dockerignore — vídeos vêm do R2)
