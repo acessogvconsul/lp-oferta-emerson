@@ -14,7 +14,9 @@ export default defineConfig({
   },
   vite: {
     preview: {
-      allowedHosts: ["caminho.paijose.site"],
+      allowedHosts: true,
+      host: "0.0.0.0",
+      port: 4173,
     },
   },
 });
