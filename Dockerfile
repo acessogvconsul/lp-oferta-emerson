@@ -1,22 +1,28 @@
-FROM node:22-slim
+# ── Stage 1: build ────────────────────────────────────────────────────────────
+FROM node:22-slim AS builder
 
 WORKDIR /app
 
-# Instala o Bun (package manager do projeto)
 RUN npm install -g bun@latest
 
-# Copia lockfiles antes do source para aproveitar cache de camadas
 COPY package.json bun.lock bunfig.toml ./
 RUN bun install
 
-# Copia o restante do source e builda
 # (public/*.mp4 excluídos via .dockerignore — vídeos vêm do R2)
 COPY . .
+
+# Gera dist/client/ (assets) + dist/server/index.mjs (servidor SSR self-contained)
 RUN bun run build
 
-# Nitro node-server: servidor Node.js HTTP nativo, tudo bundlado em dist/server/
-EXPOSE 3000
+# Inicia o servidor SSR em background e usa scripts/prerender.mjs para capturar
+# a saída de / como HTML estático em dist/client/index.html.
+# Porta 19823 evita conflito com serviços externos durante o build.
+RUN PORT=19823 node dist/server/index.mjs & PRERENDER_PORT=19823 node scripts/prerender.mjs
 
-ENV PORT=3000
+# ── Stage 2: serve ────────────────────────────────────────────────────────────
+FROM nginx:alpine
 
-CMD ["node", "dist/server/index.mjs"]
+COPY --from=builder /app/dist/client /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
