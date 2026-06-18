@@ -20,4 +20,4 @@ EXPOSE 4173
 ENV WRANGLER_SEND_METRICS=false \
     WRANGLER_HOME=/tmp/wrangler
 
-CMD ["npm", "run", "preview", "--", "--port", "4173", "--host", "0.0.0.0"]
+CMD ["node", "node_modules/.bin/wrangler", "dev", "--local", "--ip", "0.0.0.0", "--port", "4173", "dist/server/server.js", "--assets", "dist/client"]
