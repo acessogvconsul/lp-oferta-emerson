@@ -14,10 +14,9 @@ RUN bun install
 COPY . .
 RUN bun run build
 
-# vite preview com @cloudflare/vite-plugin serve via Wrangler/Workerd (runtime CF)
-EXPOSE 4173
+# Nitro node-server: servidor Node.js HTTP nativo, tudo bundlado em dist/server/
+EXPOSE 3000
 
-ENV WRANGLER_SEND_METRICS=false \
-    WRANGLER_HOME=/tmp/wrangler
+ENV PORT=3000
 
-CMD ["node", "node_modules/.bin/wrangler", "dev", "--local", "--ip", "0.0.0.0", "--port", "4173", "dist/server/server.js", "--assets", "dist/client"]
+CMD ["node", "dist/server/index.mjs"]
