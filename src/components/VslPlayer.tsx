@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useCtaReveal } from "./CtaReveal";
 
-const VSL_SRC = "/vsl.mp4";
+const VSL_SRC = "https://pub-413084ab8d6949a3879e2b76a9a9d960.r2.dev/vsl.mp4";
 
 export function VslPlayer() {
   const { startWatching, reportVideoTime, watchedFraction, testimonialPlaying } = useCtaReveal();

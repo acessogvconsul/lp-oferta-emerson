@@ -3,9 +3,9 @@ import { Play } from "lucide-react";
 import { useCtaReveal } from "./CtaReveal";
 
 const ITEMS = [
-  { name: "Carlos", city: "SP", video: "/depoimento-1.mp4", poster: "/depoimento-1.jpg" },
-  { name: "Roberto", city: "MG", video: "/depoimento-2.mp4", poster: "/depoimento-2.jpg" },
-  { name: "Ana",    city: "RJ", video: "/depoimento-3.mp4", poster: "/depoimento-3.jpg" },
+  { name: "Carlos", city: "SP", video: "https://pub-413084ab8d6949a3879e2b76a9a9d960.r2.dev/depoimento-1.mp4", poster: "/depoimento-1.jpg" },
+  { name: "Roberto", city: "MG", video: "https://pub-413084ab8d6949a3879e2b76a9a9d960.r2.dev/depoimento-2.mp4", poster: "/depoimento-2.jpg" },
+  { name: "Ana",    city: "RJ", video: "https://pub-413084ab8d6949a3879e2b76a9a9d960.r2.dev/depoimento-3.mp4", poster: "/depoimento-3.jpg" },
 ];
 
 export function Testimonials() {
