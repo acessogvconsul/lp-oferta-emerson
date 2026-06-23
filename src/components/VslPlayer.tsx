@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { VolumeX } from "lucide-react";
 import { useCtaReveal } from "./CtaReveal";
 
 const VSL_SRC = "https://pub-413084ab8d6949a3879e2b76a9a9d960.r2.dev/vsl.mp4";
@@ -8,6 +9,12 @@ export function VslPlayer() {
   const visualProgress = Math.pow(watchedFraction, 0.6) * 100;
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [muted, setMuted] = useState(true);
+
+  const handleUnmute = () => {
+    setMuted(false);
+    if (videoRef.current) videoRef.current.muted = false;
+  };
 
   useEffect(() => {
     const video = videoRef.current;
@@ -52,18 +59,12 @@ export function VslPlayer() {
     };
   }, [startWatching, reportVideoTime]);
 
-  // muta a VSL enquanto um depoimento está tocando
-  const testimonialWasActive = useRef(false);
+  // muta a VSL enquanto um depoimento está tocando, respeitando o estado de mute do usuário
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
-    if (testimonialPlaying) {
-      testimonialWasActive.current = true;
-      v.muted = true;
-    } else if (testimonialWasActive.current) {
-      v.muted = false;
-    }
-  }, [testimonialPlaying]);
+    v.muted = muted || testimonialPlaying;
+  }, [muted, testimonialPlaying]);
 
   return (
     <div className="relative">
@@ -96,6 +97,26 @@ export function VslPlayer() {
               style={{ pointerEvents: "none" }}
               tabIndex={-1}
             />
+            {muted && (
+              <button
+                onClick={handleUnmute}
+                className="absolute inset-0 z-20 flex items-center justify-center"
+                aria-label="Ativar som"
+              >
+                <span
+                  className="flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium"
+                  style={{
+                    background: "oklch(0 0 0 / 0.65)",
+                    border: "1px solid oklch(0.82 0.13 78 / 0.4)",
+                    color: "oklch(0.92 0.06 75)",
+                    backdropFilter: "blur(4px)",
+                  }}
+                >
+                  <VolumeX size={16} />
+                  Toque para ativar o som
+                </span>
+              </button>
+            )}
             {watchedFraction > 0 && (
               <div className="absolute inset-x-0 bottom-0 z-10 h-[4px] bg-white/[0.07]">
                 <div
